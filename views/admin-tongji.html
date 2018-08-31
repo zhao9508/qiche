@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>管理员面板</title>
+    <link href="/public/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/public/css/dashboard.css" rel="stylesheet">
+    <link rel="stylesheet" href="/public/css/jquery-ui.css"/>
+    <link rel="stylesheet" href="/public/css/pqgrid.min.css"/>
+    <link rel="stylesheet" href="/public/themes/office/pqgrid.css"/>
+    <script src="/public/js/echarts.min.js"></script>
+    <style>
+        body{
+            background: url("/public/images/bm.jpg");
+            background-size: cover;
+        }
+        .ml10 {
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.51);
+            margin-left: 10px;
+        }
+
+        .nav-tabs2 {
+            border-bottom: 0px;
+        }
+
+        #myTabContent2 {
+            float: right;
+        }
+        .page-header{
+            margin-left: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">汽车租赁系统</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="javascript:void(0);" id="out">退出登录</a></li>
+            </ul>
+
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="bs-example bs-example-tabs">
+            <div class="col-md-8 ml10">
+                <ul id="myTab" class="nav nav-tabs nav-sidebar" role="tablist">
+                    <li class=""><a href="/admin/course/">客人查询</a></li>
+                    <li><a href="/admin/bm/">租赁登记</a></li>
+                    <li><a href="/admin/guihuan/">归还登记</a></li>
+                    <li class="active" ><a href="#tongji" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true">统计分析</a></li>
+                    <li><a href="/admin/leibie/">类别档案</a></li>
+                    <li><a href="/admin/qiche/">汽车档案</a></li>
+                    <li role="presentation" class=""><a href="#xiugai" role="tab" data-toggle="tab" aria-controls="profile" aria-expanded="false">修改管理员密码</a></li>
+                    <li><a id="tuichu" href="javascript:void(0);">退出系统</a></li>
+                </ul>
+                <div id="myTabContent" class="tab-content">
+                    <div role="tabpanel" class="col-md-4 col-lg-offset-4 tab-pane fade" id="xiugai" aria-labelledby="profile-tab">
+                        <!--修改管理员密码-->
+                        <p>
+                            用户名：
+                            <select name="" id="userText" class="form-control">
+                                <option value="admin">admin</option>
+                                <option value="user" selected>user</option>
+                            </select>
+                        </p >
+                        <p>
+                            新密码：<input type="text" id="pwText" class="form-control">
+                        </p >
+                        <p>
+                            <input id="gaimimabtn" type="button" value="提交" class="btn btn-success"/>
+                        </p >
+                    </div>
+                    <div role="tabpanel" class="tab-pane fade active in" id="tongji" aria-labelledby="home-tab">
+                        <div class="bs-example bs-example-tabs" data-example-id="togglable-tabs">
+                            <ul id="myTabs" class="nav nav-tabs" role="tablist">
+                                <li role="presentation" class="active"><a href="#home" id="home-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="false">租出统计</a></li>
+                                <li role="presentation" class=""><a href="#profile" role="tab" id="profile-tab" data-toggle="tab" aria-controls="profile" aria-expanded="true">归还统计</a></li>
+                            </ul>
+                            <div id="myTabContents" class="tab-content">
+                                <div role="tabpanel" class="tab-pane fade active in" id="home" aria-labelledby="home-tab">
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th>行号</th>
+                                            <th>租凭名称</th>
+                                            <th>租凭人</th>
+                                            <th>租凭时长</th>
+                                            <th>每天租金</th>
+                                            <th>合计金额</th>
+                                            <th>租凭日期</th>
+                                            <th>管理员</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="zuchut">
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div role="tabpanel" class="tab-pane fade" id="profile" aria-labelledby="profile-tab">
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th>行号</th>
+                                            <th>租凭名称</th>
+                                            <th>租凭人</th>
+                                            <th>实收金额</th>
+                                            <th>找零金额</th>
+                                            <th>归还日期</th>
+                                            <th>管理员</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="zuchug">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--弹出的添加课程对话框start-->
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">添加客户</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    客户序号:
+                    <input class="form-control" type="number" id="xuhaoTxt"/>
+                </p>
+                <p>
+                    客户名字:
+                    <input class="form-control" type="text" id="nameTxt"/>
+                </p>
+                <p>
+                    客户电话:
+                    <input class="form-control" type="tel" id="telTxt"/>
+                </p>
+                <p>
+                    客户住址:
+                    <input class="form-control" type="text" id="addrTxt"/>
+                </p>
+                <p>
+                    身份证号码:
+                    <input class="form-control" type="number" id="idcardTxt"/>
+                </p>
+                <p>
+                    驾驶证号码:
+                    <input class="form-control" type="text" id="jiashiTxt"/>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="tijiaoBtn">提交</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="box11" style="width: 600px;height:400px;margin-left: 10px;"></div>
+<!--弹出的添加课程对话框end-->
+
+<script src="/public/js/jquery-1.12.3.min.js"></script>
+<script type="text/javascript" src="/public/js/bootstrap.min.js"></script>
+<script src="/public/js/jquery-ui.min.js"></script>
+<script src="/public/js/pqgrid.min.js"></script>
+<script type="text/javascript" src="/public/js/underscore-min.js"></script>
+<script type="text/javascript">
+    $("#out").click(function () {
+        var boolean = confirm("确定要退出登录吗？");
+        if (boolean) {
+            window.location = "/";
+        } else {
+            window.location = "/admin";
+        }
+    });
+    $("#tuichu").click(function () {
+        var boolean = confirm("确定要退出系统吗？");
+        if (boolean) {
+            window.location = "/";
+        } else {
+            window.location = "/admin/course/";
+        }
+    });
+    $("#gaimimabtn").click(function () {
+        $.post("/admin/changepassword", {
+            "user": $("#userText").val(),
+            "pw": $("#pwText").val()
+        }, function (data) {
+            alert(data);
+            window.location = "/";
+        });
+    });
+    $("#tijiaoBtn").click(function () {
+        //这个JSON会直接进入数据库，所以体会到了NoSQL的好处，程序是JSON，持久也是JSON，不变形！
+        $.post("/admin/zuche/add", {
+            "cid": $("#xuhaoTxt").val(),
+            "name": $("#nameTxt").val(),
+            "tel": $("#telTxt").val(),
+            "addr": $("#addrTxt").val(),
+            "num1": $("#idcardTxt").val(),
+            "num2": $("#jiashiTxt").val()
+        }, function (data) {
+            alert(data);
+            $("#myModal").modal("hide");
+            $("#myModal input").val("");
+            refresh();
+        });
+        window.location.reload("/");
+    });
+    //删除按钮
+    $("#shanchubtn").click(function () {
+        //除以2，这是因为paramquery这个框架有点小问题，会重复算tr两次
+        var amount = $("tr.pq-row-select").length / 2;
+
+        var boolean = confirm("确认要删除" + amount + "条目么？");
+
+        if (!boolean) {
+            return;
+        }
+
+        //要删除的元素的_id的数组
+        var needToDelete = [];
+        //遍历，找到要删除的元素的_id，放入数组，集体发给模型，进行集体删除！
+        $("tr.pq-row-select").each(function () {
+            needToDelete.push($(this).find("td[pq-col-indx=0]").html());
+        });
+        //去重，这是因为paramquery这个框架有点小问题，会重复算tr两次
+        needToDelete = _.uniq(needToDelete);
+        //发出Ajax请求
+        $.post("/admin/zuche/delete", {
+            needToDelete: JSON.stringify(needToDelete)
+        }, function (data) {
+            if (data == -1) {
+                alert("删除错误！");
+            } else {
+                alert("成功删除" + data + "条");
+                $("tr.pq-row-select").slideUp();
+            }
+        });
+    });
+
+    refresh();
+
+    function refresh() {
+        //数据
+        $.get("/admin/zuche/all", {z: Math.random()}, function (data) {
+            //用ajax拿到结果
+            var dataobj = data.results;
+            // console.log(dataobj);
+            //配置表格
+            $("#grid").pqGrid({
+                width: 770,
+                height: 165,
+                title: "全部客户信息表",
+                resizable: false,
+                draggable: false,
+                dataModel: {
+                    data: dataobj  //填充数据
+                },
+                pageModel: {
+                    type: "local", rPP: 2, strRpp: "{0}", strDisplay: "{0} to {1} of {2}"
+                },
+                selectionModel: {type: 'none', subtype: 'incr', cbHeader: true, cbAll: true},
+                colModel: [
+                    {title: "_id", width: 100, dataType: "string", dataIndx: "_id", editable: false},
+                    {title: "id", width: 40, dataType: "integer", dataIndx: "cid"},
+                    {title: "客户姓名", width: 100, dataType: "string", dataIndx: "name"},
+                    {title: "电话", width: 100, dataType: "integer", dataIndx: "tel"},
+                    {title: "住址", width: 100, dataType: "string", dataIndx: "addr"},
+                    {title: "身份证号码", width: 150, dataType: "integer", dataIndx: "num1"},
+                    {title: "驾驶证号码", width: 100, dataType: "string", dataIndx: "num2"},
+                    {
+                        title: "",
+                        dataIndx: "state",
+                        width: 30,
+                        minWidth: 30,
+                        align: "center",
+                        type: 'checkBoxSelection',
+                        cls: 'ui-state-default',
+                        resizable: false,
+                        sortable: false
+                    }
+                ],
+                //用户编辑单元格结束之后做的事情
+                cellSave: function (event, ui) {
+                    console.log(ui);
+                    // ui.rowData能够拿到这一行的全部数据，甭废话，直接扔给服务器持久化！
+                    $.post("/admin/zuche/change", ui.rowData, function (data) {
+
+                    });
+                }
+            });
+        });
+    }
+    tongjidianji();
+    function tongjidianji(){
+        var mo;
+        var mos;
+        var q=null;
+        var b=null;
+        $.get("/admin/bm/all",function(data){
+            console.log(data);
+            $("#zuchut").empty();
+            $("#zuchug").empty();
+            for(var i=0;i<data.results.length;i++){
+                if(data.results[i].shu==8){
+                    mo="<tr>";
+                    mo+="<td>"+data.results[i].cid+"</td>";
+                    mo+="<td>"+data.results[i].name+"</td>";
+                    mo+="<td>"+data.results[i].people+"</td>";
+                    mo+="<td>"+data.results[i].sc+"</td>";
+                    mo+="<td>"+data.results[i].zj+"</td>";
+                    mo+="<td>"+data.results[i].zj*data.results[i].sc+"</td>";
+                    mo+="<td>"+'2018/6/4'+"</td>";
+                    mo+="<td style='color: white'>"+'郭月斌'+"</td>";
+                    mo+="</tr>";
+                    $("#zuchut").append(mo);
+
+                    b=b+1;
+                }
+                if(data.results[i].gui==1){
+                    mos="<tr>";
+                    mos+="<td>"+data.results[i].cid+"</td>";
+                    mos+="<td>"+data.results[i].name+"</td>";
+                    mos+="<td>"+data.results[i].people+"</td>";
+                    mos+="<td>"+data.results[i].pay+"</td>";
+                    mos+="<td>"+(data.results[i].pay -data.results[i].zj*data.results[i].sc)+"</td>";
+                    mos+="<td>"+'2018/6/4'+"</td>";
+                    mos+="<td style='color: white'>"+'郭月斌'+"</td>";
+                    mos+="</tr>";
+                    $("#zuchug").append(mos);
+                    q=q+1;
+                }
+                var box11 = echarts.init(document.getElementById('box11'));
+
+                var option = {
+                    title : {
+                        text: '',
+                        x:'center'
+                    },
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: "{a} <br/>{b}: {c} ({d}%)"
+                    },
+                    legend: {
+                        orient: 'vertical',
+                        x: 'left',
+                        data:['租出','归还']
+                    },
+                    series: [
+                        {
+                            name:'访问来源',
+                            type:'pie',
+                            radius: ['50%', '70%'],
+                            avoidLabelOverlap: false,
+                            label: {
+                                normal: {
+                                    show: false,
+                                    position: 'center'
+                                },
+                                emphasis: {
+                                    show: true,
+                                    textStyle: {
+                                        fontSize: '30',
+                                        fontWeight: 'bold'
+                                    }
+                                }
+                            },
+                            labelLine: {
+                                normal: {
+                                    show: false
+                                }
+                            },
+                            data:[
+                                {value:b, name:'租出'},
+                                {value:q, name:'归还'}
+                            ]
+                        }
+                    ]
+                };
+
+                box11.setOption(option);
+            }
+        });
+    };
+
+</script>
+</body>
+</html>

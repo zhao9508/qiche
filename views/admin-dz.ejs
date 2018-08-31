@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>汽车租赁系统</title>
+    <link href="/public/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/public/css/dashboard.css" rel="stylesheet">
+    <link rel="stylesheet" href="/public/css/jquery-ui.css"/>
+    <link rel="stylesheet" href="/public/css/pqgrid.min.css"/>
+    <link rel="stylesheet" href="/public/themes/office/pqgrid.css"/>
+    <style>
+        body{
+            background: url("/public/images/bm.jpg");
+            background-size: cover;
+        }
+        .ml10 {
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.51);
+            margin-left: 10px;
+        }
+
+        .nav-sidebar {
+            margin-right: -15px;
+            margin-bottom: 20px;
+            margin-left: -15px;
+        }
+        .nav-tabs2 {
+            border-bottom: 0px;
+        }
+        #myTabContent2 {
+            float: left;
+            margin-left: 50px;
+        }
+        .page-header{
+            margin-left: 20px;
+        }
+        p{
+            /*color: white;*/
+            margin: 0 0 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">汽车租赁系统</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="javascript:void(0);" id="out">退出登录</a></li>
+            </ul>
+
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="bs-example bs-example-tabs">
+            <div class="col-md-8 ml10">
+                <ul id="myTab" class="nav nav-tabs nav-sidebar" role="tablist">
+                    <li class=""><a href="/admin/course/">客人查询</a></li>
+                    <li role="presentation" class="active"><a href="#zulin" role="tab" data-toggle="tab" aria-controls="profile" aria-expanded="false">租赁登记</a>
+                    </li>
+                    <li><a href="/admin/guihuan/">归还登记</a></li>
+                    <li><a href="/admin/tongji/">统计分析</a></li>
+                    <li><a href="/admin/leibie/">类别档案</a></li>
+                    <li><a href="/admin/qiche/">汽车档案</a></li>
+                    <li role="presentation" class=""><a href="#xiugai" role="tab" data-toggle="tab" aria-controls="profile" aria-expanded="false">修改管理员密码</a></li>
+                    <li><a id="tuichu" href="javascript:void(0);">退出系统</a></li>
+                </ul>
+                <div id="myTabContent" class="tab-content">
+                    <div role="tabpanel" class="tab-pane fade active in" id="zulin" aria-labelledby="profile-tab">
+                        <div class="col-md-1 ml10">
+                            <ul id="myTab2" class="nav nav-tabs2 nav-sidebar" role="tablist">
+
+                            </ul>
+                        </div>
+                        <div id="myTabContent2" class="tab-content">
+                            <div role="tabpanel" class="tab-pane fade active in" id="dazhong" aria-labelledby="dropdown1-tab">
+                                <input type="button" class="btn btn-info btn-md" value="添加汽车" data-toggle="modal" data-target="#myModal"/>
+                                <input type="button" class="btn btn-success btn-md" value="返回" onclick="fanhui()"/>
+                                <section class="grid" style="width:770px;">
+                                    <div id="grid" style="margin-top:20px;"></div>
+                                    <!--表格end-->
+                                </section>
+                                <br>
+                                <input type="button" value="删除所选" id="" class="btn btn-danger shanchubtn"
+                                       style="float:right;"/>
+                                <form action="/qdzc">
+                                    <p>
+                                        租赁时长：<input id="sc" type="text" style="width: 50px;">&nbsp;<span
+                                                style="color: red;">天</span>
+                                        每天租金：<input id="zj" type="text" style="width: 50px;">&nbsp;<span
+                                                style="color: red;">元</span>
+                                        合计金额：<input id="je" type="text" style="width: 50px;">&nbsp;<span
+                                                style="color: red;">元</span>
+                                        <button id="qdzc" type="button" class="btn btn-info" data-dismiss="modal"
+                                                style="margin-right: 140px;float: right">确定租出
+                                        </button>
+                                    </p>
+                                    <p>
+                                        客人选择：
+                                        <select name="" id="select">
+                                            <%
+                                            for (var i = 0;i < people.length;i++){
+                                            %>
+                                            <option value="<%= people[i].name %>"><%= people[i].name %></option>
+                                            <%
+                                            }
+                                            %>
+                                        </select>
+                                        客人支付：<input id="pay" type="text" style="width:200px;">
+                                        <button id="t" type="button" class="btn btn-info" data-dismiss="modal"
+                                                style="margin-right: 223px;float: right;">退出
+                                        </button>
+                                    </p>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="col-md-4 col-lg-offset-4 tab-pane fade" id="xiugai" aria-labelledby="profile-tab">
+                        <!--修改管理员密码-->
+                        <p>
+                            用户名：
+                            <select name="" id="userText" class="form-control">
+                                <option value="admin">admin</option>
+                                <option value="user" selected>user</option>
+                            </select>
+                        </p >
+                        <p>
+                            新密码：<input type="text" id="pwText" class="form-control">
+                        </p >
+                        <p>
+                            <input id="gaimimabtn" type="button" value="提交" class="btn btn-success"/>
+                        </p >
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--弹出的添加课程对话框start-->
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">添加汽车</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    汽车行号:
+                    <input class="form-control" type="number" id="xuhaoTxt"/>
+                </p>
+                <p>
+                    汽车名称:
+                    <input class="form-control" type="text" id="nameTxt"/>
+                </p>
+                <p>
+                    每天租金:
+                    <input class="form-control" type="tel" id="zjTxt"/>
+                </p>
+                <p>
+                    可租状态:
+                    <input class="form-control" type="text" id="ztTxt"/>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="tijiaoBtn">提交</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--弹出的添加课程对话框end-->
+
+<script src="/public/js/jquery-1.12.3.min.js"></script>
+<script type="text/javascript" src="/public/js/bootstrap.min.js"></script>
+<script src="/public/js/jquery-ui.min.js"></script>
+<script src="/public/js/pqgrid.min.js"></script>
+<script type="text/javascript" src="/public/js/underscore-min.js"></script>
+<script type="text/javascript">
+    $("#out").click(function () {
+        var boolean = confirm("确定要退出登录吗？");
+        if (boolean) {
+            window.location = "/";
+        } else {
+            window.location = "/admin";
+        }
+    });
+    $("#tuichu").click(function () {
+        var boolean = confirm("确定要退出系统吗？");
+        if (boolean) {
+            window.location = "/";
+        } else {
+            window.location = "/admin";
+        }
+    });
+    $("#gaimimabtn").click(function () {
+        $.post("/admin/changepassword", {
+            "user": $("#userText").val(),
+            "pw": $("#pwText").val()
+        }, function (data) {
+            alert(data);
+            window.location = "/admin";
+        });
+    });
+    $("#tijiaoBtn").click(function () {
+        //这个JSON会直接进入数据库，所以体会到了NoSQL的好处，程序是JSON，持久也是JSON，不变形！
+        $.post("/admin/bm/add", {
+            "cid": $("#xuhaoTxt").val(),
+            "name": $("#nameTxt").val(),
+            "zj": $("#zjTxt").val(),
+            "zt": $("#ztTxt").val(),
+        }, function (data) {
+            alert(data);
+            $("#myModal").modal("hide");
+            $("#myModal input").val("");
+            dz();
+        });
+        window.location.reload("/");
+    });
+    $("#t").click(function () {
+        var boolean = confirm("确定要退出吗？");
+        if (boolean) {
+            window.location = "/admin";
+        } else {
+            window.location = "/admin/bm/";
+        }
+    });
+    $("#qdzc").click(function(){
+        //要删除的元素的_id的数组
+        var needTozuchu = [];
+        //遍历，找到要删除的元素的_id，放入数组，集体发给模型，进行集体删除！
+        $("tr.pq-row-select").each(function () {
+            needTozuchu.push($(this).find("td[pq-col-indx=0]").html());
+        });
+        //去重，这是因为paramquery这个框架有点小问题，会重复算tr两次
+        needTozuchu = _.uniq(needTozuchu);
+        console.log(needTozuchu);
+        //发出Ajax请求
+        var sc = $("#sc").val();
+        var zj = $("#zj").val();
+        var je = $("#je").val();
+        var select = $("#select option:selected").val();
+        var pay = $("#pay").val();
+
+        $.post("/qdzc",{
+            needTozuchu: JSON.stringify(needTozuchu),
+            sc : sc,
+            zj : zj,
+            je : je,
+            select : select,
+            pay : pay,
+        },function(data){
+            if (data == -1) {
+                alert("租出错误！");
+            } else {
+                alert("成功租出" + data + "条");
+                dz();
+            }
+        })
+    });
+    //删除按钮
+    $(".shanchubtn").click(function () {
+        //除以2，这是因为paramquery这个框架有点小问题，会重复算tr两次
+        var amount = $("tr.pq-row-select").length / 2;
+
+        var boolean = confirm("确认要删除" + amount + "条目么？");
+
+        if (!boolean) {
+            return;
+        }
+
+        //要删除的元素的_id的数组
+        var needToDelete = [];
+        //遍历，找到要删除的元素的_id，放入数组，集体发给模型，进行集体删除！
+        $("tr.pq-row-select").each(function () {
+            needToDelete.push($(this).find("td[pq-col-indx=0]").html());
+        });
+        //去重，这是因为paramquery这个框架有点小问题，会重复算tr两次
+        needToDelete = _.uniq(needToDelete);
+        //发出Ajax请求
+        $.post("/admin/bm/delete", {
+            needToDelete: JSON.stringify(needToDelete)
+        }, function (data) {
+            if (data == -1) {
+                alert("删除错误！");
+            } else {
+                alert("成功删除" + data + "条");
+                $("tr.pq-row-select").slideUp();
+            }
+        });
+    });
+
+    $("#dz").click(dz);
+
+    dz();
+
+    function dz() {
+        $.get("/admin/bm/all", {z: Math.random()}, function (data) {
+            //用ajax拿到结果
+            // var dataobj = data.results;
+            var dataobj = [];
+            for (var i = 0;i<data.results.length;i++){
+
+                if(data.results[i].cid == 3){
+                    dataobj.push(data.results[i]);
+                }
+                // return;
+            }
+            // console.log(dataobj);
+            //配置表格
+            $("#grid").pqGrid({
+                width: 770,
+                height: 165,
+                title: "租赁登记表",
+                resizable: false,
+                draggable: false,
+                dataModel: {
+                    data: dataobj  //填充数据
+                },
+                pageModel: {
+                    type: "local", rPP: 2, strRpp: "{0}", strDisplay: "{0} to {1} of {2}"
+                },
+                selectionModel: {type: 'none', subtype: 'incr', cbHeader: true, cbAll: true},
+                colModel: [
+                    {title: "_id", width: 100, dataType: "string", dataIndx: "_id", editable: false},
+                    {title: "行号", width: 40, dataType: "integer", dataIndx: "cid"},
+                    {title: "汽车名称", width: 100, dataType: "string", dataIndx: "name"},
+                    {title: "每天租金", width: 100, dataType: "integer", dataIndx: "zj"},
+                    {title: "可租状态", width: 100, dataType: "string", dataIndx: "zt"},
+                    {
+                        title: "",
+                        dataIndx: "state",
+                        width: 30,
+                        minWidth: 30,
+                        align: "center",
+                        type: 'checkBoxSelection',
+                        cls: 'ui-state-default',
+                        resizable: false,
+                        sortable: false
+                    }
+                ],
+                //用户编辑单元格结束之后做的事情
+                cellSave: function (event, ui) {
+                    console.log(ui);
+                    // ui.rowData能够拿到这一行的全部数据，甭废话，直接扔给服务器持久化！
+                    $.post("/admin/bm/change", ui.rowData, function (data) {
+
+                    });
+                }
+            });
+        });
+    }
+    dzs();
+    function dzs(){
+        $.get("/admin/collection/all",{z:Math.random()},function(data){
+
+
+            $("<li><a href=\"/admin/bm/\">宝马类</a></li>\n" +
+                "<li><a href=\"/admin/1/\">奥迪类</a></li>\n" +
+                "<li role=\"presentation\" class=\"active\">" +
+                "<a id=\"dz\" href=\"#dazhong\" role=\"tab\" data-toggle=\"tab\" aria-controls=\"profile\" aria-expanded=\"false\">大众类</a></li>")
+                .appendTo($("#myTab2"));
+            for (var i = 3; i < data.results.length; i++) {
+                if (data.results[i].hasOwnProperty("names")) {
+                    // console.log(i);
+                    $("<li><a href='/admin/" + i + "'>" + data.results[i].names + "类</a></li>").appendTo($("#myTab2"))
+                }
+            }
+        })
+    }
+    function fanhui() {
+        window.location = "/admin";
+    }
+    $("#sc").keyup(function () {
+
+        var needTozuchu = [];
+        $("tr.pq-row-select").each(function () {
+            needTozuchu.push($(this).find("td[pq-col-indx=3]").html());
+        });
+        needTozuchu = _.uniq(needTozuchu);
+        var meitian=needTozuchu[0];
+        var sc=$(this).val()
+        var zj =$("#zj").val(meitian)
+        var he=parseInt(sc)*parseInt(meitian)
+        if($(this).val()==""){
+            $("#zj").val("")
+            $("#je").val("")
+        }
+        else{
+            $("#je").val(he)
+        }
+
+
+    })
+</script>
+</body>
+</html>

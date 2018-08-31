@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>汽车租赁系统</title>
+    <link href="/public/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/public/css/dashboard.css" rel="stylesheet">
+    <link rel="stylesheet" href="/public/css/jquery-ui.css"/>
+    <link rel="stylesheet" href="/public/css/pqgrid.min.css"/>
+    <link rel="stylesheet" href="/public/themes/office/pqgrid.css"/>
+    <style>
+        .ml10 {
+            margin-left: 10px;
+        }
+        .page-header{
+            margin-left: 20px;
+        }
+        body{
+            background: url("/public/images/bm.jpg");
+            background-size: cover;
+        }
+        .
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">汽车租赁系统</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="javascript:void(0);" id="out">退出登录</a></li>
+            </ul>
+
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="bs-example bs-example-tabs">
+            <div class="col-md-8 ml10 lefts">
+                <ul id="myTab" class="nav nav-tabs nav-sidebar">
+                    <li class=""><a href="/admin/course/">客人查询</a></li>
+                    <li><a href="/admin/bm/">租赁登记</a></li>
+                    <li><a href="/admin/guihuan/">归还登记</a></li>
+                    <li><a href="/admin/tongji/">统计分析</a></li>
+                    <li><a href="/admin/leibie/">类别档案</a></li>
+                    <li><a href="/admin/qiche/">汽车档案</a></li>
+                    <li role="presentation" class=""><a href="#xiugai" role="tab" data-toggle="tab" aria-controls="profile" aria-expanded="false">修改管理员密码</a></li>
+                    <li><a id="tuichu" href="javascript:void(0);">退出系统</a></li>
+                </ul>
+                <div id="myTabContent" class="tab-content">
+                    <div role="tabpanel" class="col-md-4 col-lg-offset-4 tab-pane fade" id="xiugai" aria-labelledby="profile-tab">
+                        <!--修改管理员密码-->
+                        <p>
+                            用户名：
+                            <select name="" id="userText" class="form-control">
+                                <option value="xiaozhao">xiaozhao</option>
+                                <option value="user" selected>user</option>
+                            </select>
+                        </p >
+                        <p>
+                            新密码：<input type="text" id="pwText" class="form-control">
+                        </p >
+                        <p>
+                            <input id="gaimimabtn" type="button" value="提交" class="btn btn-success"/>
+                        </p >
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--弹出的添加课程对话框start-->
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">添加客户</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    客户序号:
+                    <input class="form-control" type="number" id="xuhaoTxt"/>
+                </p>
+                <p>
+                    客户名字:
+                    <input class="form-control" type="text" id="nameTxt"/>
+                </p>
+                <p>
+                    客户电话:
+                    <input class="form-control" type="tel" id="telTxt"/>
+                </p>
+                <p>
+                    客户住址:
+                    <input class="form-control" type="text" id="addrTxt"/>
+                </p>
+                <p>
+                    身份证号码:
+                    <input class="form-control" type="number" id="idcardTxt"/>
+                </p>
+                <p>
+                    驾驶证号码:
+                    <input class="form-control" type="text" id="jiashiTxt"/>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="tijiaoBtn">提交</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--弹出的添加课程对话框end-->
+
+<script src="/public/js/jquery-1.12.3.min.js"></script>
+<script type="text/javascript" src="/public/js/bootstrap.min.js"></script>
+<script src="/public/js/jquery-ui.min.js"></script>
+<script src="/public/js/pqgrid.min.js"></script>
+<script type="text/javascript" src="/public/js/underscore-min.js"></script>
+<script type="text/javascript">
+    $("#out").click(function () {
+        var boolean = confirm("确定要退出登录吗？");
+        if (boolean) {
+            window.location = "/";
+        } else {
+            window.location = "/admin";
+        }
+    });
+    $("#tuichu").click(function () {
+        var boolean = confirm("确定要退出系统吗？");
+        if (boolean) {
+            window.location = "/";
+        } else {
+            window.location = "/admin";
+        }
+    });
+    $("#gaimimabtn").click(function () {
+        $.post("/admin/changepassword", {
+            "user": $("#userText").val(),
+            "pw": $("#pwText").val()
+        }, function (data) {
+            alert(data);
+            window.location = "/admin";
+        });
+    });
+</script>
+</body>
+</html>
